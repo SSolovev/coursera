@@ -65,6 +65,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }         // remove and return a random item
 
     public Item sample() {
+        if (size <= 0) {
+            throw new NoSuchElementException();
+        }
         int randomIndex = StdRandom.uniform(size);
         return arr[randomIndex];
     }       // return (but do not remove) a random item
@@ -77,14 +80,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private int pointer = 0;
         private int[] innerArr;
 
-        //
+
         public RandomIter() {
             innerArr = new int[size];
 
         }
 
 //        private void resizeIter(int capacity) {
-//            assert capacity >= size;
+////            assert capacity >= size;
 //            int[] temp = new int[capacity];
 //            for (int i = 0; i < size; i++) {
 //                temp[i] = innerArr[i];
@@ -102,15 +105,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (!hasNext()) {
                 throw new NoSuchElementException("Error!");
             }
-//            if(size>=innerArr.length){
-//                resizeIter(size*2);
-//            }
-            int index = StdRandom.uniform(pointer + 1);
-            if (innerArr[index] == -1) {
+
+            int index = 0;
+            do {
                 index = StdRandom.uniform(pointer + 1);
-            } else {
-                innerArr[index] = -1;
-            }
+            } while (innerArr[index] == -1);
+            innerArr[index] = -1;
             pointer++;
             return arr[index];
         }
@@ -122,17 +122,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        RandomizedQueue<Integer> queue = new RandomizedQueue<Integer>();
-        for (int i = 0; i < 15; i++) {
-            queue.enqueue(i);
-        }
-
-        for (Integer v : queue) {
-            System.out.println("Outer v: " + v);
-//            for (Integer v2 : queue) {
-//                System.out.println("Inner v: " + v2);
-//            }
-        }
 
 
     }   // unit testing
