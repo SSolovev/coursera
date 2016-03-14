@@ -97,7 +97,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         @Override
         public boolean hasNext() {
-            return pointer < (size - 1);
+            return pointer < (size);
         }
 
         @Override
@@ -122,7 +122,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
+RandomizedQueue queue = new RandomizedQueue();
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+        queue.enqueue(4);
+        queue.enqueue(5);
 
+        Iterator iter =queue.iterator();
+        queue.dequeue();
+        Iterator iter2 =queue.iterator();
+//        System.out.println("Deque: "+queue.dequeue());
+        while(iter.hasNext()){
+            System.out.println(iter.next());
+        }
+        while(iter2.hasNext()){
+            System.out.println(iter2.next());
+        }
 
     }   // unit testing
 }

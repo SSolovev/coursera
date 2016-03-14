@@ -58,7 +58,7 @@ public class Deque<Item> implements Iterable<Item> {
         } else {
             Node oldLast = last;
             last = new Node(item, oldLast, null);
-            oldLast.previous=last;
+            oldLast.previous = last;
         }
         size++;
     }         // add the item to the end
@@ -144,14 +144,5 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-Deque deque = new Deque();
-        deque.isEmpty();
-        deque.addLast(1);
-        deque.addLast(2);
-        deque.removeFirst();
-        deque.addLast(4);
-        deque.removeFirst();
-
-
     }  // unit testing
 }
