@@ -12,8 +12,9 @@ public class FastCollinearPoints {
         if (points == null) {
             throw new NullPointerException();
         }
+//        Arrays.sort(points);
         Arrays.sort(points, points[0].slopeOrder());
-        Arrays.sort(points);
+
         for (int i = 0; i < points.length - 3; i++) {
             if (points[i] == null) {
                 throw new NullPointerException();
@@ -23,6 +24,7 @@ public class FastCollinearPoints {
             }
             double d1 = points[i].slopeTo(points[i + 1]);
             double d2 = points[i].slopeTo(points[i + 2]);
+
             if (d1 == d2) {
                 double d3 = points[i].slopeTo(points[i + 3]);
                 if (d1 == d3) {
