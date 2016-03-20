@@ -1,9 +1,6 @@
 package week.three;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public class BruteCollinearPoints {
@@ -16,7 +13,7 @@ public class BruteCollinearPoints {
             throw new NullPointerException();
         }
         lineArr = new ArrayList<LineSegment>();
-//        Arrays.sort(points, points[0].slopeOrder());
+        Arrays.sort(points);
         int incl = 0;
 
         for (int a = 0; a < points.length - 3; a++) {
@@ -24,95 +21,90 @@ public class BruteCollinearPoints {
             if (points[a] == null) {
                 throw new NullPointerException();
             }
-            if (points[a].slopeTo(points[a + 1]) == Double.NEGATIVE_INFINITY) {
-                throw new IllegalArgumentException();
-            }
-            incl = 0;
-            if (included.contains(points[a])) {
-                incl++;
-            }
-            second:
-            for (int b = a + 1; b < points.length; b++) {
-                if (included.contains(points[b])) {
-                    incl++;
-                }
-                if (incl > 1) {
-                    break;
-                }
-                for (int c = b + 1; c < points.length; c++) {
-                    if (included.contains(points[c])) {
-                        incl++;
-                    }
-                    if (incl > 1) {
-                        break;
-                    }
-                    double d1 = points[a].slopeTo(points[b]);
-                    double d2 = points[a].slopeTo(points[c]);
-                    if (d1 == d2) {
-                        for (int d = c + 1; d < points.length; d++) {
-                            if (included.contains(points[d])) {
-                                incl++;
-                            }
-                            if (incl > 1) {
-                                break;
-                            }
-//                            if (isIncluded(points[a], points[b], points[c], points[d])) {
-//                                break;
-//                            }
-                            double d3 = points[a].slopeTo(points[d]);
-                            if (d1 == d3) {
-//                                LineSegment l1 = new LineSegment(points[a], points[b]);
-//                                LineSegment l2 = new LineSegment(points[b], points[c]);
-//                                LineSegment l3 = new LineSegment(points[c], points[d]);
-//
-//                                if(!isAdded(l1)){break;}
-//                                if(!isAdded(l2)){break;}
-//                                if(!isAdded(l3)){break;}
-                                lineArr.add(new LineSegment(points[a], points[d]));
-                                included.add(points[a]);
-                                included.add(points[b]);
-                                included.add(points[c]);
-                                included.add(points[d]);
-                                numberOfSegments++;
 
-                                System.out.println("One line: " + points[a] + " " + points[b] + " " + points[c] + " " + points[d]);
-                                break second;
+//            incl = 0;
+//            if (included.contains(points[a])) {
+//                incl++;
+//            }
+            for (int b = a + 1; b < points.length - 2; b++) {
+                if (points[a].slopeTo(points[b]) == Double.NEGATIVE_INFINITY) {
+                    throw new IllegalArgumentException();
+                }
+                for (int c = b + 1; c < points.length - 1; c++) {
+                    double slopeAB = points[a].slopeTo(points[b]);
+                    double slopeAC = points[a].slopeTo(points[c]);
+                    if (slopeAB == slopeAC) {
+                        for (int d = c + 1; d < points.length; d++) {
+
+                            if (slopeAC == points[a].slopeTo(points[d])) {
+                                numberOfSegments++;
+                                lineArr.add(new LineSegment(points[a], points[d]));
+
                             }
                         }
                     }
 
                 }
             }
+//            second:
+//            for (int b = a + 1; b < points.length; b++) {
+//                if (included.contains(points[b])) {
+//                    incl++;
+//                }
+//                if (incl > 1) {
+//                    break;
+//                }
+//                for (int c = b + 1; c < points.length; c++) {
+//                    if (included.contains(points[c])) {
+//                        incl++;
+//                    }
+//                    if (incl > 1) {
+//                        break;
+//                    }
+//                    double d1 = points[a].slopeTo(points[b]);
+//                    double d2 = points[a].slopeTo(points[c]);
+//                    if (d1 == d2) {
+//                        for (int d = c + 1; d < points.length; d++) {
+//                            if (included.contains(points[d])) {
+//                                incl++;
+//                            }
+//                            if (incl > 1) {
+//                                break;
+//                            }
+////                            if (isIncluded(points[a], points[b], points[c], points[d])) {
+////                                break;
+////                            }
+//                            double d3 = points[a].slopeTo(points[d]);
+//                            if (d1 == d3) {
+////                                LineSegment l1 = new LineSegment(points[a], points[b]);
+////                                LineSegment l2 = new LineSegment(points[b], points[c]);
+////                                LineSegment l3 = new LineSegment(points[c], points[d]);
+////
+////                                if(!isAdded(l1)){break;}
+////                                if(!isAdded(l2)){break;}
+////                                if(!isAdded(l3)){break;}
+//                                lineArr.add(new LineSegment(points[a], points[d]));
+//                                included.add(points[a]);
+//                                included.add(points[b]);
+//                                included.add(points[c]);
+//                                included.add(points[d]);
+//                                numberOfSegments++;
+//
+//                                System.out.println("One line: " + points[a] + " " + points[b] + " " + points[c] + " " + points[d]);
+//                                break second;
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            }
         }
+        System.out.println(numberOfSegments);
+        System.out.println(numberOfSegments / 4);
     }   // finds all line segments containing 4 points
 
-    private boolean isAdded(LineSegment a) {
-        if (lineArr.contains(a)) {
-            return false;
-        } else {
-            lineArr.add(a);
-            return true;
-        }
-    }
-
-    private boolean isIncluded(Point a, Point b, Point c, Point d) {
-        int i = 0;
-        if (included.contains(a)) {
-            i++;
-        }
-        if (included.contains(b)) {
-            i++;
-        }
-        if (included.contains(c)) {
-            i++;
-        }
-        if (included.contains(d)) {
-            i++;
-        }
-        return i > 1;
-    }
-
     public int numberOfSegments() {
+
         return numberOfSegments;
     } // the number of line segments
 
