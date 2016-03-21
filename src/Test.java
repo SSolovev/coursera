@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Stopwatch;
 
 /**
  * Created by solovevs on 17-Mar-16.
@@ -28,8 +29,16 @@ public class Test {
         StdDraw.show();
 
         // print and draw the line segments
-//        FastCollinearPoints collinear = new FastCollinearPoints(points);
-        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+
+        Stopwatch sw = new Stopwatch();
+//        BruteCollinearPoints collinear=null;
+        FastCollinearPoints collinear = null;
+        for (int i = 0; i < 100; i++) {
+            collinear = new FastCollinearPoints(points);
+//            collinear = new BruteCollinearPoints(points);
+        }
+        ;
+        System.out.println(sw.elapsedTime());
         for (LineSegment segment : collinear.segments()) {
             StdOut.println(segment);
             segment.draw();

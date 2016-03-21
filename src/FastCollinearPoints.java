@@ -1,7 +1,5 @@
 //package week.three;
 
-import edu.princeton.cs.algs4.Stopwatch;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -15,7 +13,7 @@ public class FastCollinearPoints {
         if (copyPoints == null) {
             throw new NullPointerException();
         }
-        Stopwatch sw = new Stopwatch();
+
         Point[] points = Arrays.copyOf(copyPoints, copyPoints.length);
 
         for (int a = 0; a < points.length; a++) {
@@ -52,9 +50,7 @@ public class FastCollinearPoints {
 //                System.out.println("++++++++++++++++++++++++++");
 
                 if (gt - lt > 1) {
-
                     Arrays.sort(points, lt, gt + 1);
-
                     if (sortPoint.compareTo(points[lt]) <= 0 && v.compareTo(points[lt]) == 0) {
                         numberOfSegments++;
                         lineArr.add(new LineSegment(sortPoint, points[gt]));
@@ -64,11 +60,7 @@ public class FastCollinearPoints {
 
             }
 
-
         }
-        System.out.println(sw.elapsedTime());
-
-
     }// finds all line segments containing 4 or more points
 
     private void exchange(Point[] points, int i, int j) {
