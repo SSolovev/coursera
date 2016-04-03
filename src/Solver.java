@@ -1,227 +1,115 @@
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Comparator;
 
-/**
- * Created by solovevs on 31-Mar-16.
- */
+
 public class Solver {
 
-    //  private Board board;
-//  private MinPQ<Board> result;
     private boolean solvable = false;
     private int moves = -1;
+    private Stack<Board> pathStack = new Stack<>();
+
     private Comparator<Node> comparator = new Comparator<Node>() {
         @Override
         public int compare(Node o1, Node o2) {
-
-
-            int o1Moves = o1.getMoves();
-            int o2Moves = o2.getMoves();
-
-            int o1Ham = o1.hamming() + o1Moves;
-            int o2Ham = o2.hamming() + o2Moves;
-
-            if (o1Ham > o2Ham) {
+            int m1 = o1.manhattan() + o1.moves;
+            int m2 = o2.manhattan() + o2.moves;
+            if (m1 > m2) {
                 return 1;
-            } else if (o1Ham < o2Ham) {
+            } else if (m1 < m2) {
                 return -1;
             } else {
-                int o1Man = o1.manhattan() + o1Moves;
-                int o2Man = o2.manhattan() + o2Moves;
-                if (o1Man > o2Man) {
-                    return 1;
-                } else if (o1Man < o2Man) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+                return 0;
             }
-
         }
     };
-    private Queue<Board> pathQueue = new Queue<>();
-//    private MinPQ<Board> pathQueueTwin = new MinPQ<Board>(comparator);
+
 
     public Solver(Board initial) {
-        Board twin = initial.twin();
-//        System.out.println("Initial: \n"+initial);
-//        System.out.println("Twin: \n"+twin);
+
         if (initial.isGoal()) {
-            pathQueue.enqueue(initial);
+            pathStack.push(initial);
             solvable = true;
-        } else if (twin.isGoal()) {
-            solvable = false;
+            moves = 0;
         } else {
-//            findResult(initial, null, pathQueue, twin, null);
-            Node n = ResolveAndGetMoves(initial);
+            Node n = resolveAndGetMoves(initial);
             if (n != null) {
-                System.out.println("Result: " + n.getBoard());
                 solvable = true;
-                moves = n.getMoves();
-                Node previous = n.getPrevious();
-                pathQueue.enqueue(n.getBoard());
+                moves = n.moves;
+                pathStack.push(n.board);
+                Node previous = n.previous;
                 while (previous != null) {
-                    pathQueue.enqueue(previous.getBoard());
-                    previous = previous.getPrevious();
+                    pathStack.push(previous.board);
+                    previous = previous.previous;
                 }
             }
 
 
         }
-//    board = initial;
-    }          // find a solution to the initial board (using the A* algorithm)
+    }
 
     public boolean isSolvable() {
         return solvable;
     }         // is the initial board solvable?
 
     public int moves() {
-        if (isSolvable()) {
-            return moves;
-        } else {
-            return -1;
-        }
-
-    }       // min number of moves to solve initial board; -1 if unsolvable
-
-//    private MinPQ<Board> queue = new MinPQ<>(comparator);
-//    private MinPQ<Board> queueTwin = new MinPQ<>(comparator);
-//
-//    private void findResult(Board current, Board previous, MinPQ<Board> pathQueue,
-//                            Board currentTwin, Board previousTwin) {
-//        if (previous == null) {
-//            pathQueue.insert(current);
-//        }
-//
-//
-////        MinPQ<Board> queue = new MinPQ<>(comparator);
-////        MinPQ<Board> queueTwin = new MinPQ<>(comparator);
-//        Iterable<Board> neighbors = current.neighbors();
-//        Iterable<Board> neighborsTwin = currentTwin.neighbors();
-//        for (Board n : neighbors) {
-//            if (!n.equals(previous)) {
-//                queue.insert(n);
-//            }
-//        }
-//        for (Board nt : neighborsTwin) {
-//            if (!nt.equals(previousTwin)) {
-//                queueTwin.insert(nt);
-//            }
-//        }
-//        Board min = queue.delMin();
-//        Board minTwin = queueTwin.delMin();
-//        moves++;
-//        pathQueue.insert(min);
-//
-//        if (min.isGoal()) {
-//            return;
-//        } else if (minTwin.isGoal()) {
-//            solvable = false;
-//            return;
-//        } else {
-//            findResult(min, current, pathQueue,
-//                    minTwin, currentTwin);
-//        }
-//
-//    }
+        return moves;
+    }
 
     private class Node {
-        private Board current;
-
-//        @Override
-//        public boolean equals(Object o) {
-//            if (this == o) return true;
-//            if (o == null || getClass() != o.getClass()) return false;
-//
-//            Node node = (Node) o;
-//
-//            if (moves != node.moves) return false;
-//            if (current != null ? !current.equals(node.current) : node.current != null) return false;
-//            return previous != null ? previous.equals(node.previous) : node.previous == null;
-//
-//        }
-//
-//        @Override
-//        public int hashCode() {
-//            int result = current != null ? current.hashCode() : 0;
-//            result = 31 * result + (previous != null ? previous.hashCode() : 0);
-//            result = 31 * result + moves;
-//            return result;
-//        }
-
-        public Node getPrevious() {
-
-            return previous;
-        }
-
-        public Board getBoard() {
-
-            return current;
-        }
-
+        private Board board;
         private Node previous;
-
-        public int manhattan() {
-            return current.manhattan();
-        }
-
-        public int hamming() {
-            return current.hamming();
-        }
-
-        public int getMoves() {
-            return moves;
-        }
-
         private int moves;
 
         public Node(Board current, Node previous, int moves) {
-            this.current = current;
+            this.board = current;
             this.previous = previous;
             this.moves = moves;
         }
+
+        public int manhattan() {
+            return board.manhattan();
+        }
+
+        public int hamming() {
+            return board.hamming();
+        }
+
     }
 
-    private Node ResolveAndGetMoves(Board current) {
-//        int movesLocal = 0;
-        MinPQ<Node> queue = new MinPQ<Node>(comparator);
-        MinPQ<Node> queueTwin = new MinPQ<Node>(comparator);
+    private Node resolveAndGetMoves(Board current) {
+        MinPQ<Node> queue = new MinPQ<>(comparator);
+        MinPQ<Node> queueTwin = new MinPQ<>(comparator);
         Board twin = current.twin();
 
         queue.insert(new Node(current, null, 0));
         queueTwin.insert(new Node(twin, null, 0));
 
-//        Board previous = null;
-//        Board previousTwin = null;
-
         while (!queue.isEmpty()) {
             Node minTwin = queueTwin.delMin();
             Node min = queue.delMin();
-//            System.out.println("++++++++++++++++++\nMoves: " + movesLocal);
-//            System.out.println(min);
-//            pathQueue.push(min.getBoard());
-            if (min.getBoard().isGoal()) {
+
+            if (min.board.isGoal()) {
                 return min;
-            } else if (minTwin.getBoard().isGoal()) {
+            } else if (minTwin.board.isGoal()) {
                 return null;
             } else {
-//                movesLocal++;
-                Iterable<Board> neighbors = min.getBoard().neighbors();
+                Iterable<Board> neighbors = min.board.neighbors();
                 for (Board n : neighbors) {
-                    if (min.getPrevious() == null || !n.equals(min.getPrevious().getBoard())) {
-                        queue.insert(new Node(n, min, min.getMoves() + 1));
+                    if (min.previous == null || !n.equals(min.previous.board)) {
+                        queue.insert(new Node(n, min, min.moves + 1));
                     }
                 }
-//                previous = min.getBoard();
 
-                Iterable<Board> neighborsTwin = minTwin.getBoard().neighbors();
+                Iterable<Board> neighborsTwin = minTwin.board.neighbors();
                 for (Board n : neighborsTwin) {
-                    if (minTwin.getPrevious() == null || !n.equals(minTwin.getPrevious().getBoard())) {
-                        queueTwin.insert(new Node(n, minTwin, minTwin.getMoves() + 1));
+                    if (minTwin.previous == null || !n.equals(minTwin.previous.board)) {
+                        queueTwin.insert(new Node(n, minTwin, minTwin.moves + 1));
                     }
                 }
-//                previousTwin = minTwin.getBoard();
             }
         }
         return null;
@@ -229,7 +117,7 @@ public class Solver {
 
     public Iterable<Board> solution() {
         if (isSolvable()) {
-            return pathQueue;
+            return pathStack;
         } else {
             return null;
         }
@@ -237,27 +125,6 @@ public class Solver {
     }     // sequence of boards in a shortest solution; null if unsolvable
 
     public static void main(String[] args) {
-
-//        int[][] tst = {{0, 1, 3},
-//                {4, 2, 5},
-//                {7, 8, 6}};
-//
-//        int[][] tst = {{1, 2, 3},
-//                {4, 5, 6},
-//                {8, 7, 0}};
-//        int[][] tst = {{0, 1},
-//                       {2, 3}};
-//        Board b = new Board(tst);
-////    System.out.println(b);
-//
-//        Solver s = new Solver(b);
-//        System.out.println("moves: " + s.moves());
-//
-//        System.out.println("res: ");
-//        for (Board sol : s.solution()) {
-//            System.out.println(sol);
-//        }
-        // create initial board from file
         In in = new In(args[0]);
         int N = in.readInt();
         int[][] blocks = new int[N][N];
@@ -265,7 +132,7 @@ public class Solver {
             for (int j = 0; j < N; j++)
                 blocks[i][j] = in.readInt();
         Board initial = new Board(blocks);
-
+//        System.out.println("MANH: " + initial.manhattan());
         // solve the puzzle
         Solver solver = new Solver(initial);
 
