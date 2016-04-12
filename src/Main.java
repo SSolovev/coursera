@@ -15,9 +15,9 @@ public class Main {
     return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
   }
 
-  public static void fill(Connection c, String val) {
-
-  }
+//  public static void fill(Connection c, String val) {
+//
+//  }
 
   public static void p(int N) {
     int sum = 0;
